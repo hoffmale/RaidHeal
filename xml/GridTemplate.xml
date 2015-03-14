@@ -1,0 +1,43 @@
+<Ui xmlns="http://www.runewaker.com/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.runewaker.com/UI.xsd">
+    <Frame name="RH_GridTemplate" virtual="true" enableMouse="true">
+        <Frames>
+            <Frame name="$parent_MenuBar">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="25"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Frames>
+                    <Button name="$parent_CloseButton" text="X">
+                        <Anchors>
+                            <Anchor point="TOPRIGHT"/>
+                        </Anchors>
+                        <Size>
+                            <AbsDimension x="25" y="25"/>
+                        </Size>
+                    </Button>
+                </Frames>
+            </Frame>
+            <Frame name="$parent_GridArea">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_MenuBar"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parent_Tooltip">
+                <Size>
+                    <AbsDimension x="100" y="100"/>
+                </Size>
+            </Frame>
+            <Frame name="$parent_MoveFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>
