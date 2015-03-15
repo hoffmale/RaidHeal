@@ -30,4 +30,39 @@ guiObject: The GUI object to be arranged
 
 GUIBuilder:AddTemplatePath(path)
 --------------------------------
-Adds a 
+Adds the template(s) given by the return value of the file at the given path to the known templates list
+
+path:      string of the template file to be loaded
+
+[Returns]: nothing if successful, error message otherwise
+
+
+template definition
+===================
+
+a template is defined to be a table with the following methods:
+
+template:Create(name, parent[, errorLvl])
+-----------------------------------------
+name:      the name of the frame to be created
+parent:    the parent frame
+errorLvl:  The error level on which errors should be raised
+[Returns]: a valid GUIObject
+
+template:Arrange(guiObject)
+---------------------------
+guiObject: the GUIObject to be arranged (must be created from the same template)
+[Returns]: the arranged guiObject
+
+GUIObject definition
+====================
+a GUIObject is either a frame with some required fields or a table with some required methods
+
+frame fields
+------------
+_template      the template used to create this frame
+
+object methods
+--------------
+:GetTemplate() returns the template
+:GetFrame()    Returns a frame or nil
