@@ -6,6 +6,10 @@ local LIB_VERSION = 1.0
 local ERRMSG_TEMPLATE_UNKNOWN = string.format("[%s] Template unknown: '%%s'", LIB_NAME)
 local ERRMSG_TEMPLATE_LOADED = string.format("[%s] Template already loaded: '%%s'", LIB_NAME)
 local ERRMSG_TEMPLATE_INVALID = string.format("[%s] Template invalid: '%%s'", LIB_NAME)
+local ERRMSG_TEMPLATE_NOT_FOUND = string.format("[%s] Template not found", LIB_NAME)
+
+local ERRMSG_PARENT_INVALID = string.format("[%s] Invalid parent", LIB_NAME)
+local ERRMSG_PARENT_NOT_FOUND = string.format("[%s] Parent not found: '%%s'", LIB_NAME)
 
 local GUIBuilder, oldVersion = LibStub:NewLibrary(LIB_NAME, LIB_VERSION)
 
@@ -57,24 +61,45 @@ local function loadTemplates(path)
 end
 
 function GUIBuilder:Create(template, name, parent, errorLvl)
+    errorLvl = (errorLvl or 1) + 1
     if not self._templates[template] then
-        error(ERRMSG_TEMPLATE_UNKNOWN:format(tostring(template)), 2)
+        error(ERRMSG_TEMPLATE_UNKNOWN:format(tostring(template)), errorLvl)
+    end
+    
+    if type(parent) == "string" then
+        if not _G[parent] then
+            error(ERRMSG_PARENT_NOT_FOUND:format(parent), errorLvl)
+        end
+        parent = _G[parent]
+    elseif type(parent) == "table" then
+        if parent.GetFrame then
+            parent = parent:GetFrame()
+        elseif not parent.GetName then
+            error(ERRMSG_PARENT_INVALID, errorLvl)
+        end
+    else
+        error(ERRMSG_PARENT_INVALID, errorLvl)
     end
 
-    local frame = self._templates[template]:Create(name, parent, (errorLvl or 0) + 1)
-    if frame then
-        frame._template = template
-    end
+    local frame = self._templates[template]:Create(name, parent, errorLvl + 1)
     return frame
 end
 
-function GUIBuilder:Arrange(frame, errorLvl)
+function GUIBuilder:Arrange(guiObject, errorLvl)
     errorLvl = (errorLvl or 1) + 1
-    if not frame or not frame._template or not self._templates[frame._template] then
-        error(ERRMSG_TEMPLATE_UNKNOWN:format(tostring(frame._template)), errorLvl)
+    
+    local template = nil
+    if guiObject.GetTemplate then
+        template = guiObject:GetTemplate()
+    elseif guiObject.GetName and guiObject._template then
+        template = guiObject._template
     end
-
-    return self._templates[frame._template]:Arrange(frame, errorLvl)
+    
+    if not template then
+        error(ERRMSG_TEMPLATE_NOT_FOUND, errorLvl)
+    end
+    
+    return template:Arrange(guiObject, errorLvl + 1)
 end
 
 function GUIBuilder:AddTemplatePath(path)
