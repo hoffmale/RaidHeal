@@ -61,8 +61,10 @@ a GUIObject is either a frame with some required fields or a table with some req
 frame fields
 ------------
 _template      the template used to create this frame
+_templateName  the name of the template used
 
 object methods
 --------------
-:GetTemplate() returns the template
-:GetFrame()    Returns a frame or nil
+:GetTemplate()      Returns the template
+:GetTemplateName()  Returns the name of the used template (if any)
+:GetFrame()         Returns a frame or nil
